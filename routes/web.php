@@ -8,13 +8,11 @@ Route::get('/', function () {
 });
 
 Route::get('/flights-data', function () {
-    try {
-        $response = Http::withoutVerifying()->get('https://deskplan.lv/flight/all.json');
-        $data = $response->json();
+    $response = Http::withoutVerifying()
+        ->get('https://opensky-network.org/api/states/all');
 
-        // Atgriežam tikai lidojumu masīvu (states)
-        return response()->json($data['states'] ?? []);
-    } catch (\Exception $e) {
-        return response()->json([]);
-    }
+    return response()->json(
+        json_decode((string) $response, true)['states'] ?? []
+    );
+
 });
